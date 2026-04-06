@@ -14,7 +14,7 @@ class AdvancedCrawler:
         self.urls = []
         self.logger = logging.getLogger(__name__)
         self.web_mode = web_mode  # Fast mode for web deployment
-        self.url_limit = 10 if web_mode else 100  # Limit URLs for web
+        self.url_limit = 3 if web_mode else 100  # Only 3 URLs for web mode! (was 10)
         
     def crawl(self):
         self._crawl_recursive(self.base_url, 0)
@@ -35,14 +35,14 @@ class AdvancedCrawler:
         self.logger.info(f"Crawling: {url}")
         
         try:
-            # Shorter delay for web mode, longer for stealth
+            # Much shorter delay for web mode
             if self.web_mode:
-                time.sleep(random.uniform(0.05, 0.2))  # Fast for web
+                time.sleep(random.uniform(0.01, 0.05))  # Ultra-fast for web
             else:
                 time.sleep(random.uniform(0.5, 2.0))   # Stealth for local
             
-            # Shorter timeout for web deployment (3s instead of 10s)
-            timeout = 3 if self.web_mode else 10
+            # 1 second timeout for web (was 3s)
+            timeout = 1 if self.web_mode else 10
             response = self.session.get(url, timeout=timeout)
             
             if response.status_code == 200:
