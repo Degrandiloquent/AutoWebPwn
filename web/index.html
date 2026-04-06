@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background: linear-gradient(-45deg, #0f1729, #1a2847, #0d1f3c, #1a3c5e);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
             min-height: 100vh;
@@ -21,6 +21,46 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #hackerBackground {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .hacker-element {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            opacity: 0.1;
+            white-space: nowrap;
+            color: #667eea;
+        }
+        
+        .code-snippet {
+            animation: float linear infinite;
+        }
+        
+        @keyframes floatDown {
+            from {
+                transform: translateY(-100px) translateX(0);
+                opacity: 0.15;
+            }
+            to {
+                transform: translateY(100vh) translateX(var(--tx));
+                opacity: 0;
+            }
+        }
+        
+        .floating-code {
+            animation: floatDown linear infinite;
         }
         
         @keyframes gradient {
@@ -39,6 +79,8 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             animation: slideUp 0.6s ease-out;
+            position: relative;
+            z-index: 1;
         }
         
         @keyframes slideUp {
@@ -126,16 +168,19 @@
         }
         
         .warning-box {
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 193, 7, 0.1));
-            border-left: 4px solid #ff6b6b;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(35, 166, 213, 0.15));
+            border-left: 4px solid #667eea;
             padding: 20px;
             margin-bottom: 40px;
             border-radius: 12px;
-            color: #ffd700;
+            color: #b3c1ff;
             font-size: 14px;
             line-height: 1.6;
             animation: slideInLeft 0.6s ease-out 0.3s both;
             backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(102, 126, 234, 0.3);
+            border-right: 1px solid rgba(35, 166, 213, 0.2);
+            border-bottom: 1px solid rgba(35, 166, 213, 0.2);
         }
         
         @keyframes slideInLeft {
@@ -150,7 +195,7 @@
         }
         
         .warning-box strong {
-            color: #ff6b6b;
+            color: #667eea;
         }
         
         .form-group {
@@ -492,6 +537,7 @@
     </style>
 </head>
 <body>
+    <div id="hackerBackground"></div>
     <div class="container">
         <div class="header">
             <h1>🛡️ AutoWebPwn</h1>
@@ -500,9 +546,9 @@
         
         <div class="content">
             <div class="warning-box">
-                <strong>⚠️ Legal Notice:</strong> You must have explicit written permission to scan this target. Unauthorized scanning is illegal. By using this tool, you confirm you have authorization.
+                <strong>🔐 Authorization Required:</strong> You must have explicit written permission to scan this target. Unauthorized scanning is illegal.
                 <br><br>
-                <strong>⏱️ Web Deployment Note:</strong> Scans must complete within 60 seconds. For thorough scans, run locally using <code>python main.py -u [url]</code>
+                <strong>⚡ Performance Tip:</strong> Web scans complete in ~60 seconds with limited depth. For deep reconnaissance, run locally: <code>python main.py -u [url]</code>
             </div>
             
             <form id="scanForm">
@@ -742,6 +788,64 @@
             errorBox.textContent = message;
             errorBox.classList.remove('hidden');
         }
+    </script>
+    
+    <script>
+        // Generate floating hacker scenes
+        const hackerBackground = document.getElementById('hackerBackground');
+        const codeSnippets = [
+            'def scan_target(url):',
+            'socket.connect(target)',
+            'payload = ">><script>alert(1)</script>',
+            'if vulnerable: return True',
+            'SELECT * FROM users--',
+            '../../../etc/passwd',
+            'Authorization: Bearer token',
+            'fetch("/api/scan")',
+            'const csrf = getCookie("csrf")',
+            'response.status === 200',
+            'connection.execute(query)',
+            'XMLHttpRequest.send()',
+            'JSON.parse(response)',
+            'async function pwn() {',
+            'while(true) {',
+            'if (error) { retry++; }',
+            'headers["X-Forwarded-For"]',
+            'req.body.sanitize()',
+            'hash = sha256(password)',
+            'token.verify(jwt, secret)',
+        ];
+        
+        function createFloatingElement() {
+            const element = document.createElement('div');
+            element.className = 'hacker-element floating-code';
+            element.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+            
+            const startX = Math.random() * window.innerWidth;
+            const duration = 15 + Math.random() * 10;
+            const tx = (Math.random() - 0.5) * 100;
+            
+            element.style.left = startX + 'px';
+            element.style.top = '-50px';
+            element.style.--tx = tx + 'px';
+            element.style.animationDuration = duration + 's';
+            
+            hackerBackground.appendChild(element);
+            
+            setTimeout(() => element.remove(), duration * 1000);
+        }
+        
+        // Create initial elements
+        for (let i = 0; i < 8; i++) {
+            setTimeout(() => createFloatingElement(), i * 200);
+        }
+        
+        // Keep creating new elements
+        setInterval(() => {
+            if (hackerBackground.children.length < 12) {
+                createFloatingElement();
+            }
+        }, 2000);
     </script>
 </body>
 </html>
