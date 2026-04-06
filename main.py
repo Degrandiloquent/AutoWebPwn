@@ -114,11 +114,11 @@ class AutoWebPwn:
         
         # 2. Run selected modules
         if 'all' in self.args.modules or 'auth' in self.args.modules:
-            auth = AuthBypass(self.session, self.findings)
+            auth = AuthBypass(self.session, self.findings, web_mode=self.web_mode)
             auth.test_all(urls)
         
         if 'all' in self.args.modules or 'lfi' in self.args.modules:
-            lfi = FileInclusion(self.session, self.findings)
+            lfi = FileInclusion(self.session, self.findings, web_mode=self.web_mode)
             lfi.test_all(urls)
         
         # 3. Generate PDF report

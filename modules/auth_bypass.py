@@ -5,12 +5,24 @@ import hashlib
 import logging
 
 class AuthBypass:
-    def __init__(self, session, findings=None):
+    def __init__(self, session, findings=None, web_mode=False):
         self.session = session
         self.findings = findings if findings else {'auth_bypass': []}
         self.logger = logging.getLogger(__name__)
+        self.web_mode = web_mode  # Skip heavy testing in web mode
         
     def test_all(self, urls):
+        # In web mode, only test URLs with 'login' or 'auth' and skip most testing
+        if self.web_mode:
+            login_urls = [url for url in urls if 'login' in url.lower() or 'auth' in url.lower()]
+            # Quick test only - don't test all combinations
+            for url in login_urls[:1]:  # Only test 1 login URL max
+                result = self.sql_auth_bypass(url)
+                if result:
+                    self.findings['auth_bypass'].append(f"SQL Injection Auth Bypass: {result}")
+            return
+        
+        # Full testing in normal mode
         login_urls = [url for url in urls if 'login' in url.lower() or 'auth' in url.lower()]
         
         for url in login_urls:
