@@ -2,7 +2,7 @@
 """
 AutoWebPwn Web API - Flask/FastAPI backend for web deployment
 """
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, render_template_string
 import os
 import sys
 import tempfile
@@ -12,7 +12,7 @@ from main import AutoWebPwn
 import argparse
 from threading import Thread
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=None)
 
 # Store scan jobs
 scan_jobs = {}
@@ -203,7 +203,23 @@ def list_scans():
 @app.route('/', methods=['GET'])
 def index():
     """Serve web interface"""
-    return send_file('web/index.html')
+    try:
+        # Try multiple paths for the HTML file
+        html_paths = [
+            'web/index.html',
+            '/app/web/index.html',
+            os.path.join(os.path.dirname(__file__), 'web', 'index.html')
+        ]
+        
+        for html_path in html_paths:
+            if os.path.exists(html_path):
+                with open(html_path, 'r', encoding='utf-8') as f:
+                    return f.read(), 200, {'Content-Type': 'text/html'}
+        
+        # Fallback if file not found
+        return jsonify({'error': 'Interface not found'}), 404
+    except Exception as e:
+        return jsonify({'error': f'Error loading interface: {str(e)}'}), 500
 
 @app.route('/static/<path:path>', methods=['GET'])
 def static_files(path):
@@ -212,3 +228,6 @@ def static_files(path):
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+
+# Export app for Vercel/WSGI servers
+handler = app
