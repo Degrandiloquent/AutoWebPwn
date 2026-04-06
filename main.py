@@ -50,6 +50,7 @@ def main():
 class AutoWebPwn:
     def __init__(self, args):
         self.args = args
+        self.web_mode = getattr(args, 'web_mode', False)  # Support web mode
         self.setup_logging()
         self.session = self.create_session()
         self.findings = {
@@ -107,7 +108,7 @@ class AutoWebPwn:
         self.logger.info(f"Starting scan on {self.args.url}")
         
         # 1. Crawling phase
-        crawler = AdvancedCrawler(self.args.url, self.session, self.args.depth)
+        crawler = AdvancedCrawler(self.args.url, self.session, self.args.depth, web_mode=self.web_mode)
         urls = crawler.crawl()
         self.urls_discovered = urls
         

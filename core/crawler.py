@@ -6,19 +6,28 @@ from bs4 import BeautifulSoup
 import logging
 
 class AdvancedCrawler:
-    def __init__(self, base_url, session, max_depth=3):
+    def __init__(self, base_url, session, max_depth=3, web_mode=False):
         self.base_url = base_url
         self.session = session
         self.max_depth = max_depth
         self.visited = set()
         self.urls = []
         self.logger = logging.getLogger(__name__)
+        self.web_mode = web_mode  # Fast mode for web deployment
+        self.url_limit = 10 if web_mode else 100  # Limit URLs for web
         
     def crawl(self):
         self._crawl_recursive(self.base_url, 0)
+        # Limit URLs for web mode to ensure quick scans
+        if self.web_mode:
+            self.urls = self.urls[:self.url_limit]
         return self.urls
     
     def _crawl_recursive(self, url, depth):
+        # Stop if we have enough URLs in web mode
+        if self.web_mode and len(self.urls) >= self.url_limit:
+            return
+            
         if depth > self.max_depth or url in self.visited:
             return
         
@@ -26,10 +35,15 @@ class AdvancedCrawler:
         self.logger.info(f"Crawling: {url}")
         
         try:
-            # Random delay for stealth
-            time.sleep(random.uniform(0.5, 2.0))
+            # Shorter delay for web mode, longer for stealth
+            if self.web_mode:
+                time.sleep(random.uniform(0.05, 0.2))  # Fast for web
+            else:
+                time.sleep(random.uniform(0.5, 2.0))   # Stealth for local
             
-            response = self.session.get(url, timeout=10)
+            # Shorter timeout for web deployment (3s instead of 10s)
+            timeout = 3 if self.web_mode else 10
+            response = self.session.get(url, timeout=timeout)
             
             if response.status_code == 200:
                 self.urls.append(url)

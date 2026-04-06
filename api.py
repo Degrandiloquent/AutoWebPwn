@@ -48,6 +48,7 @@ class ScanJob:
             args.cookie = self.options.get('cookie', None)
             args.evasion = self.options.get('evasion', False)
             args.stealth = self.options.get('stealth', True)
+            args.web_mode = True  # Enable web mode for fast execution
             
             # Generate PDF filename in temp directory
             safe_url = self.url.replace('://', '_').replace('/', '_')[:30]
