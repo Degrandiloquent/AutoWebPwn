@@ -35,14 +35,14 @@ class AdvancedCrawler:
         self.logger.info(f"Crawling: {url}")
         
         try:
-            # Much shorter delay for web mode
+            # For web mode: minimal/no delay at all
             if self.web_mode:
-                time.sleep(random.uniform(0.01, 0.05))  # Ultra-fast for web
+                time.sleep(random.uniform(0.001, 0.01))  # Microseconds for web!
             else:
                 time.sleep(random.uniform(0.5, 2.0))   # Stealth for local
             
-            # 1 second timeout for web (was 3s)
-            timeout = 1 if self.web_mode else 10
+            # 0.5 second timeout for web (was 1s)
+            timeout = 0.5 if self.web_mode else 10
             response = self.session.get(url, timeout=timeout)
             
             if response.status_code == 200:

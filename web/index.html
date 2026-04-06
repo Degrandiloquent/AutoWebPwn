@@ -715,7 +715,7 @@
             checkStatus();
             
             let checkCount = 0;
-            const maxChecks = 30;  // Reduced to 45 seconds (30 * 1.5)
+            const maxChecks = 20;  // 30 seconds (20 * 1.5)
             
             if (statusCheckInterval) clearInterval(statusCheckInterval);
             statusCheckInterval = setInterval(() => {
@@ -726,7 +726,7 @@
                     statusText.textContent = 'TIMEOUT';
                     statusText.className = 'status-failed';
                     document.getElementById('progressFill').style.width = '100%';
-                    showError('⏱️ Scan exceeded time limit. Tips: 1) Try a smaller/simpler target, 2) Reduce scan depth, 3) Run locally for deep scans with: python main.py -u [url] -d 2 -o report.pdf');
+                    showError('⏱️ Scan exceeded 30 second limit. The target might be slow or unresponsive. Try: 1) A faster target, 2) Run locally for detailed scans, 3) Check if target is online.');
                     showFindings({findings: {}});
                 } else {
                     checkStatus();
