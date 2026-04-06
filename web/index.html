@@ -535,10 +535,21 @@
             font-family: 'Courier New', monospace;
             color: #667eea;
         }
+        
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: rgba(102, 126, 234, 0.6);
+            font-family: 'Courier New', monospace;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
     <div id="hackerBackground"></div>
+    <div class="footer">dyphe cybersecurity © 2026 — all rights reserved</div>
     <div class="container">
         <div class="header">
             <h1>🛡️ AutoWebPwn</h1>
@@ -795,26 +806,23 @@
         // Generate floating hacker scenes
         const hackerBackground = document.getElementById('hackerBackground');
         const codeSnippets = [
-            'def scan_target(url):',
-            'socket.connect(target)',
-            'payload = ">><script>alert(1)</script>',
-            'if vulnerable: return True',
-            'SELECT * FROM users--',
-            '../../../etc/passwd',
-            'Authorization: Bearer token',
-            'fetch("/api/scan")',
-            'const csrf = getCookie("csrf")',
-            'response.status === 200',
-            'connection.execute(query)',
-            'XMLHttpRequest.send()',
-            'JSON.parse(response)',
-            'async function pwn() {',
-            'while(true) {',
-            'if (error) { retry++; }',
-            'headers["X-Forwarded-For"]',
-            'req.body.sanitize()',
-            'hash = sha256(password)',
-            'token.verify(jwt, secret)',
+            "'if vulnerable: return True'",
+            "'SELECT * FROM users--'",
+            "'../../../etc/passwd'",
+            "'Authorization: Bearer token'",
+            "'fetch(\"/api/scan\")'",
+            "'const csrf = getCookie(\"csrf\")'",
+            "'response.status === 200'",
+            "'connection.execute(query)'",
+            "'XMLHttpRequest.send()'",
+            "'JSON.parse(response)'",
+            "'async function pwn() {'",
+            "'while(true) {'",
+            "'if (error) { retry++; }'",
+            "'headers[\"X-Forwarded-For\"]'",
+            "'req.body.sanitize()'",
+            "'hash = sha256(password)'",
+            "'token.verify(jwt, secret)'"
         ];
         
         function createFloatingElement() {
