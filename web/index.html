@@ -268,6 +268,8 @@
         <div class="content">
             <div class="warning-box">
                 <strong>⚠️ Legal Notice:</strong> You must have explicit written permission to scan this target. Unauthorized scanning is illegal. By using this tool, you confirm you have authorization.
+                <br><br>
+                <strong>⏱️ Web Deployment Note:</strong> Scans must complete within 60 seconds. Depth is limited to 1 level and threads to 2 for performance. For thorough scans, run locally using <code>python main.py -u [url]</code>
             </div>
             
             <form id="scanForm">
@@ -279,19 +281,20 @@
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="depth">Scan Depth</label>
+                        <label for="depth">Scan Depth <small>(⚡ Web scans limited to 1 level max)</small></label>
                         <select id="depth" name="depth">
-                            <option value="1">Shallow (1 level)</option>
-                            <option value="2" selected>Medium (2 levels)</option>
+                            <option value="1" selected>Shallow (1 level) - Recommended for web</option>
+                            <option value="2">Medium (2 levels)</option>
                             <option value="3">Deep (3 levels)</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label for="threads">Threads</label>
+                        <label for="threads">Threads <small>(⚡ Web scans limited to 2 max)</small></label>
                         <select id="threads" name="threads">
                             <option value="1">1 (Stealth)</option>
-                            <option value="3" selected>3 (Balanced)</option>
+                            <option value="2" selected>2 (Recommended for web)</option>
+                            <option value="3">3 (Balanced)</option>
                             <option value="5">5 (Fast)</option>
                         </select>
                     </div>
@@ -422,11 +425,22 @@
         });
         
         async function startStatusCheck() {
-            // Check immediately, then every 2 seconds
+            // Check immediately, then every 1.5 seconds (faster feedback)
             checkStatus();
             
+            let checkCount = 0;
+            const maxChecks = 40; // 40 * 1.5s = 60s max timeout
+            
             if (statusCheckInterval) clearInterval(statusCheckInterval);
-            statusCheckInterval = setInterval(checkStatus, 2000);
+            statusCheckInterval = setInterval(() => {
+                checkCount++;
+                if (checkCount > maxChecks) {
+                    clearInterval(statusCheckInterval);
+                    showError('Scan timeout: Web scans must complete within 60 seconds. Try reducing the depth setting.');
+                } else {
+                    checkStatus();
+                }
+            }, 1500);
         }
         
         async function checkStatus() {

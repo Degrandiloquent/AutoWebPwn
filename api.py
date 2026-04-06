@@ -32,6 +32,7 @@ class ScanJob:
         """Execute the scan"""
         try:
             self.status = "running"
+            self.progress = 10
             
             # Create args object
             class Args:
@@ -39,31 +40,38 @@ class ScanJob:
             
             args = Args()
             args.url = self.url
-            args.depth = self.options.get('depth', 2)
+            # Cap settings for Vercel - web deployments need to be fast
+            args.depth = min(self.options.get('depth', 1), 1)  # Max depth 1 for web
             args.modules = self.options.get('modules', 'all')
-            args.threads = self.options.get('threads', 3)
+            args.threads = min(self.options.get('threads', 2), 2)  # Max 2 threads for web
             args.proxy = self.options.get('proxy', None)
             args.cookie = self.options.get('cookie', None)
             args.evasion = self.options.get('evasion', False)
-            args.stealth = self.options.get('stealth', True)  # Default to stealth for web
+            args.stealth = self.options.get('stealth', True)
             
             # Generate PDF filename in temp directory
             safe_url = self.url.replace('://', '_').replace('/', '_')[:30]
             temp_dir = tempfile.gettempdir()
             args.output = os.path.join(temp_dir, f"report_{self.job_id}_{safe_url}.pdf")
             
-            # Run scan
+            # Run scan with timeout
+            self.progress = 25
             framework = AutoWebPwn(args)
+            self.progress = 50
+            
             framework.run()
             
+            self.progress = 75
             self.report_path = args.output
             self.findings = framework.findings
-            self.status = "completed"
             self.progress = 100
+            self.status = "completed"
             
         except Exception as e:
             self.status = "failed"
             self.error = str(e)
+            import traceback
+            self.error += "\n" + traceback.format_exc()[:500]
 
 @app.route('/health', methods=['GET'])
 def health():
