@@ -1,0 +1,51 @@
+# AutoWebPwn Configuration
+
+targets:
+  default: "http://localhost"
+  
+scanning:
+  depth: 3
+  threads: 10
+  timeout: 30
+  
+evasion:
+  random_delay: true
+  min_delay: 0.5
+  max_delay: 3.0
+  rotate_user_agents: true
+  
+proxy:
+  enabled: false
+  http: "http://127.0.0.1:8080"
+  socks5: "socks5://127.0.0.1:9050"
+  
+modules:
+  enabled:
+    - auth_bypass
+    - file_inclusion
+    - sql_injection
+    - xss
+    - command_injection
+    
+payloads:
+  level: "medium"  # low, medium, high, insane
+  
+reporting:
+  format: "html"
+  output_dir: "./reports"
+  
+advanced:
+  javascript_execution: true
+  websocket_testing: true
+  graphql_testing: true
+  
+# Custom headers
+headers:
+  User-Agent: "AutoWebPwn/1.0"
+  X-Forwarded-For: "127.0.0.1"
+  
+# Authentication (if needed)
+auth:
+  username: ""
+  password: ""
+  cookie: ""

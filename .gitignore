@@ -1,0 +1,43 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+\.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Reports and Logs
+logs/
+reports/
+*.pdf
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+.directory
+
+# Project specific
+.sixth/
+config/local_*.yaml
+*.tmp
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/

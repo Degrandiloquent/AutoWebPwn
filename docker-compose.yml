@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # DVWA - Damn Vulnerable Web Application
+  dvwa:
+    image: vulnerables/web-dvwa:latest
+    container_name: autowebpwn-dvwa
+    ports:
+      - "80:80"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: dvwa
+      MYSQL_USER: dvwa
+      MYSQL_PASSWORD: p@ssw0rd
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/dvwa"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # WebGoat - OWASP Interactive Learning Platform
+  webgoat:
+    image: webgoat/goatandwolf:latest
+    container_name: autowebpwn-webgoat
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    environment:
+      JAVA_OPTS: "-Xmx1024m"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/WebGoat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # bWAPP - Buggy Web Application
+  bwapp:
+    image: raesene/bwapp:latest
+    container_name: autowebpwn-bwapp
+    ports:
+      - "81:80"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/bwapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Juice Shop - OWASP Vulnerable Application
+  juice-shop:
+    image: bkimminich/juice-shop:latest
+    container_name: autowebpwn-juice-shop
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: "production"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  dvwa-data:
+  bwapp-data:
+
+networks:
+  default:
+    name: autowebpwn-network

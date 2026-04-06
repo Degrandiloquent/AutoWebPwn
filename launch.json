@@ -1,0 +1,45 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "AutoWebPwn",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": ["-u", "http://testphp.vulnweb.com", "-o", "report.pdf"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "DVWA (Low Security)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": ["-u", "http://localhost/dvwa", "--cookie", "security=low; PHPSESSID=xxx", "-o", "report_dvwa.pdf"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "WebGoat",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": ["-u", "http://localhost:8080/WebGoat", "-o", "report_webgoat.pdf"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "bWAPP",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": ["-u", "http://localhost/bWAPP", "-o", "report_bwapp.pdf"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Juice Shop",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": ["-u", "http://localhost:3000", "-o", "report_juice_shop.pdf"],
+            "console": "integratedTerminal"
+        }
+    ]
+}
