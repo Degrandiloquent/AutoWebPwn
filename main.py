@@ -63,14 +63,21 @@ class AutoWebPwn:
         
     def setup_logging(self):
         import os
-        os.makedirs('logs', exist_ok=True)
+        handlers = [logging.StreamHandler()]
+        
+        # Only try to create logs directory if we have write permissions
+        try:
+            os.makedirs('logs', exist_ok=True)
+            handlers.append(logging.FileHandler('logs/autowebpwn.log'))
+        except (OSError, IOError, PermissionError):
+            # Vercel and other cloud environments have read-only filesystems
+            # Just use console logging in those cases
+            pass
+        
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(levelname)s - %(message)s',
-            handlers=[
-                logging.FileHandler('logs/autowebpwn.log'),
-                logging.StreamHandler()
-            ]
+            handlers=handlers
         )
         self.logger = logging.getLogger(__name__)
     

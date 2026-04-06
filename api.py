@@ -47,9 +47,10 @@ class ScanJob:
             args.evasion = self.options.get('evasion', False)
             args.stealth = self.options.get('stealth', True)  # Default to stealth for web
             
-            # Generate PDF filename
+            # Generate PDF filename in temp directory
             safe_url = self.url.replace('://', '_').replace('/', '_')[:30]
-            args.output = f"/tmp/report_{self.job_id}_{safe_url}.pdf"
+            temp_dir = tempfile.gettempdir()
+            args.output = os.path.join(temp_dir, f"report_{self.job_id}_{safe_url}.pdf")
             
             # Run scan
             framework = AutoWebPwn(args)
