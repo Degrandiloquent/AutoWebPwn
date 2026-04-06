@@ -41,8 +41,8 @@ class AdvancedCrawler:
             else:
                 time.sleep(random.uniform(0.5, 2.0))   # Stealth for local
             
-            # 0.5 second timeout for web (was 1s)
-            timeout = 0.5 if self.web_mode else 10
+            # 1.5 second timeout for web (was 0.5s - too aggressive for slow servers)
+            timeout = 1.5 if self.web_mode else 10
             response = self.session.get(url, timeout=timeout)
             
             if response.status_code == 200:

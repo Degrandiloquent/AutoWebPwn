@@ -80,8 +80,8 @@ class FileInclusion:
             test_url = f"{parsed.scheme}://{parsed.netloc}{parsed.path}?{new_query}"
             
             try:
-                # Use shorter timeout in web mode (0.5 seconds)
-                timeout = 0.5 if self.web_mode else 10
+                # Use 1.5s timeout in web mode for slow servers (was 0.5s)
+                timeout = 1.5 if self.web_mode else 10
                 response = self.session.get(test_url, timeout=timeout)
                 
                 # Check for LFI indicators

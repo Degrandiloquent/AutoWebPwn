@@ -715,7 +715,7 @@
             checkStatus();
             
             let checkCount = 0;
-            const maxChecks = 20;  // 30 seconds (20 * 1.5)
+            const maxChecks = 25;  // 37.5 seconds (25 * 1.5) - allows for slow servers
             
             if (statusCheckInterval) clearInterval(statusCheckInterval);
             statusCheckInterval = setInterval(() => {
@@ -726,7 +726,7 @@
                     statusText.textContent = 'TIMEOUT';
                     statusText.className = 'status-failed';
                     document.getElementById('progressFill').style.width = '100%';
-                    showError('⏱️ Scan exceeded 30 second limit. The target might be slow or unresponsive. Try: 1) A faster target, 2) Run locally for detailed scans, 3) Check if target is online.');
+                    showError('⏱️ Scan exceeded 37 second limit. demo.testfire.net might be slow. Try: 1) Run local scan for deep analysis, 2) Try another target, 3) Use: python main.py -u http://demo.testfire.net -d 2 -o report.pdf');
                     showFindings({findings: {}});
                 } else {
                     checkStatus();
