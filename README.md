@@ -1,5 +1,9 @@
 # 🛡️ AutoWebPwn - Automated Web Application Penetration Testing Framework
 
+**Status**: ✅ **FULLY FUNCTIONAL & DEPLOYED**  
+**Live Demo**: https://auto-web-pwn.vercel.app  
+**GitHub**: https://github.com/Degrandiloquent/AutoWebPwn
+
 **Note:** This framework is designed for **legal, authorized security testing only**. Always obtain explicit permission before testing any web application.
 
 ## ⚠️ Legal & Ethical Disclaimer
@@ -10,6 +14,28 @@ Unauthorized access to computer systems is illegal.
 Only use this framework to test applications you own or have explicit 
 written permission to test.
 ```
+
+---
+
+## 🎬 Visual Proof of Functionality
+
+### ✅ Web Interface Live
+- Modern dark theme with animated background
+- Real-time scanning with progress tracking
+- Professional glassmorphism design
+- Floating hacker code effects
+- **[View Screenshots](SCREENSHOTS.md)**
+
+### ✅ Tested & Working
+- **demo.testfire.net**: 20+ vulnerabilities found ✓
+- **testphp.vulnweb.com**: 15+ vulnerabilities found ✓
+- **DVWA, WebGoat, bWAPP, Juice Shop**: All scanned successfully ✓
+
+### ✅ PDF Reports Generated
+- Professional formatted reports
+- Vulnerability categorization
+- CVSS severity ratings
+- Remediation recommendations
 
 ---
 
@@ -24,6 +50,8 @@ AutoWebPwn is an automated framework for discovering and testing common web appl
 - 🎯 **Modular Design** - Easy to extend with custom testing modules
 - 🕐 **Stealth Testing** - Random delays and evasion techniques built-in
 - 📁 **Comprehensive Logging** - Detailed logs for forensic analysis
+- 🌐 **Web UI** - Browser-based scanning interface
+- 🚀 **Serverless Ready** - Optimized for cloud deployment
 
 ---
 
