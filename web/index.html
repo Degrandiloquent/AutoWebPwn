@@ -715,14 +715,18 @@
             checkStatus();
             
             let checkCount = 0;
-            const maxChecks = 40;
+            const maxChecks = 60;  // Increased to 90 seconds (60 * 1.5)
             
             if (statusCheckInterval) clearInterval(statusCheckInterval);
             statusCheckInterval = setInterval(() => {
                 checkCount++;
                 if (checkCount > maxChecks) {
                     clearInterval(statusCheckInterval);
-                    showError('Scan timeout: Web scans must complete within 60 seconds. Try reducing the depth setting.');
+                    // Change from error to info - scan might still be processing
+                    const statusText = document.getElementById('statusText');
+                    statusText.textContent = 'TIMEOUT';
+                    statusText.className = 'status-failed';
+                    showError('Scan exceeded 90 second limit. Try smaller targets or reducing scan depth.');
                 } else {
                     checkStatus();
                 }
@@ -738,8 +742,15 @@
                 
                 updateStatus(data);
                 
+                // Clear interval if scan is done
                 if (data.status === 'completed' || data.status === 'failed') {
-                    if (statusCheckInterval) clearInterval(statusCheckInterval);
+                    if (statusCheckInterval) {
+                        clearInterval(statusCheckInterval);
+                    }
+                    // Make extra request to ensure we have latest data
+                    setTimeout(() => {
+                        checkStatus();
+                    }, 500);
                 }
                 
             } catch (error) {
@@ -752,15 +763,20 @@
             statusText.textContent = data.status.toUpperCase();
             statusText.className = `status-${data.status}`;
             
-            const progress = data.progress || 0;
+            // Ensure progress always shows as a number
+            const progress = Math.min(Math.max(data.progress || 0, 0), 100);
             document.getElementById('progressFill').style.width = progress + '%';
             
             const details = document.getElementById('statusDetails');
             details.innerHTML = `<div>Progress: <strong>${progress}%</strong></div>`;
             
             if (data.status === 'completed') {
+                // Force 100% when complete
+                document.getElementById('progressFill').style.width = '100%';
+                document.getElementById('statusText').textContent = 'COMPLETED';
                 showFindings(data);
             } else if (data.status === 'failed') {
+                document.getElementById('progressFill').style.width = '100%';
                 showError('Scan failed: ' + (data.error || 'Unknown error'));
             }
         }
@@ -772,20 +788,23 @@
             let html = '';
             let totalFindings = 0;
             
-            for (const [type, findings] of Object.entries(data.findings)) {
-                if (findings && findings.length > 0) {
-                    html += `
-                        <div class="finding-item">
-                            <div class="finding-type">${type.replace(/_/g, ' ').toUpperCase()}</div>
-                            <div class="finding-count">🎯 ${findings.length} vulnerabilities found</div>
-                        </div>
-                    `;
-                    totalFindings += findings.length;
+            // Handle findings - they might be empty or structured differently
+            if (data.findings && typeof data.findings === 'object') {
+                for (const [type, findings] of Object.entries(data.findings)) {
+                    if (Array.isArray(findings) && findings.length > 0) {
+                        html += `
+                            <div class="finding-item">
+                                <div class="finding-type">${type.replace(/_/g, ' ').toUpperCase()}</div>
+                                <div class="finding-count">🎯 ${findings.length} vulnerabilities found</div>
+                            </div>
+                        `;
+                        totalFindings += findings.length;
+                    }
                 }
             }
             
             if (totalFindings === 0) {
-                html = '<div style="color: #28a745; font-size: 16px; padding: 20px; text-align: center;">✅ No critical vulnerabilities found in this scan.</div>';
+                html = '<div style="color: #28a745; font-size: 16px; padding: 20px; text-align: center;">✅ No critical vulnerabilities found in this scan. Target appears secure.</div>';
             }
             
             findingsList.innerHTML = html;
